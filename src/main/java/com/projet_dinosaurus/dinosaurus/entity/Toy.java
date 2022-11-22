@@ -9,18 +9,29 @@ public class Toy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "toy_id", nullable = false)
     private Long id;
+    @Column( insertable=false, updatable=false)
     private String name;
     private String description;
-    private int user_id;
     private String picture;
-    private boolean isAvailable;
+    private boolean available;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User toyOwner;
+    @JoinColumn(name = "name")
+    private User owner;
 
-    @OneToMany(mappedBy = "tradedToy", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "toyId", cascade = CascadeType.ALL)
     private List<Transaction> tradedToys;
+
+    public Toy () {
+    }
+
+    public Toy(String name, String description, String picture, boolean available, User ownerId) {
+        this.setName(name);
+        this.setDescription(description);
+        this.setPicture(picture);
+        this.setAvailable(available);
+        this.setOwnerId(ownerId);
+    }
 
     public Long getId() {
         return id;
@@ -46,14 +57,6 @@ public class Toy {
         this.description = description;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
     public String getPicture() {
         return picture;
     }
@@ -62,28 +65,20 @@ public class Toy {
         this.picture = picture;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean available() {
+        return available;
     }
 
     public void setAvailable(boolean available) {
-        isAvailable = available;
+        this.available = available;
     }
 
     public User getOwner() {
-        return toyOwner;
+        return owner;
     }
 
-    public void setOwner(User toyOwner) {
-        this.toyOwner = toyOwner;
-    }
-
-    public User getToyOwner() {
-        return toyOwner;
-    }
-
-    public void setToyOwner(User toyOwner) {
-        this.toyOwner = toyOwner;
+    public void setOwnerId(User ownerId) {
+        this.owner = owner;
     }
 
     public List<Transaction> getTradedToys() {

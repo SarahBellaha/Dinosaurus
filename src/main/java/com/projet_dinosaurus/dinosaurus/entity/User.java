@@ -1,28 +1,38 @@
 package com.projet_dinosaurus.dinosaurus.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name="user")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
-    private Long id;
+    private Long ownerId;
+
     private String lastname;
+
     private String firstname;
+
     private String city;
+
     private String email;
+
     private String password;
+
     private String role;
 
-    @OneToMany(mappedBy = "toyOwner", cascade = CascadeType.ALL)
+    @OneToMany( targetEntity = Toy.class, mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Toy> toys;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL)
     private List<Transaction> ownedToys;
 
-    @OneToMany(mappedBy = "taker", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "takerId", cascade = CascadeType.ALL)
     private List<Transaction> reservedToys;
 
     public User() {
@@ -37,8 +47,8 @@ public class User {
         this.role = role;
     }
 
-    public User(Long id, String lastname, String firstname, String city, String email, String password, String role) {
-        this.id = id;
+    public User(Long ownerId, String lastname, String firstname, String city, String email, String password, String role) {
+        this.setOwnerId(ownerId);
         this.lastname = lastname;
         this.firstname = firstname;
         this.city = city;
@@ -47,13 +57,14 @@ public class User {
         this.role = role;
     }
 
-    public Long getId() {
-        return id;
+    public Long getOwnerId() {
+        return this.ownerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
+
 
     public String getLastname() {
         return lastname;

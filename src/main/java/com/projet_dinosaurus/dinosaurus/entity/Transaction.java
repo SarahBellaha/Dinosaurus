@@ -10,16 +10,24 @@ public class Transaction {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "owner_id", insertable = false, updatable = false)
-    private User owner;
+    @JoinColumn(name = "id_user", insertable = false, updatable = false)
+    private User ownerId;
+
+    private Long takerId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "taker_id", insertable = false, updatable = false)
-    private User taker;
+    @JoinColumn(name = "toy_id", insertable = false, updatable = false)
+    private Toy toyId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "traded_toy", insertable = false, updatable = false)
-    private Toy tradedToy;
+    public Transaction() {
+    }
+
+    public Transaction(User ownerId, Toy toyId, Long takerId){
+        this.ownerId = ownerId;
+        this.toyId = toyId;
+        this.takerId = takerId;
+    }
+
 
     public Long getId() {
         return id;
@@ -29,27 +37,28 @@ public class Transaction {
         this.id = id;
     }
 
-    public User getOwner() {
-        return owner;
+
+    public Long getTaker() {
+        return takerId;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public User getTaker() {
-        return taker;
-    }
-
-    public void setTaker(User taker) {
-        this.taker = taker;
+    public void setTaker(Long taker) {
+        this.takerId = takerId;
     }
 
     public Toy getTradedToy() {
-        return tradedToy;
+        return toyId;
     }
 
-    public void setTradedToy(Toy tradedToy) {
-        this.tradedToy = tradedToy;
+    public void setTradedToy(Toy toyId) {
+        this.toyId = toyId;
+    }
+
+    public User getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(User ownerId) {
+        this.ownerId = ownerId;
     }
 }
