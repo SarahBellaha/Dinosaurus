@@ -1,91 +1,58 @@
 package com.projet_dinosaurus.dinosaurus.entity;
 
-import javax.persistence.*;
-import java.util.List;
+import com.projet_dinosaurus.dinosaurus.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Entity(name = "toy")
+import javax.persistence.*;
+
+@Entity(name = "toys")
 public class Toy {
+    // @Transient pour ne pas sauvegarder cette propriété dans la table SQL
+    // (sinon Hibernate le fait pour toutes les propriétés déclarées
+    @Transient
+    public Long userId;
+
+    // @Column(name = "") pour forcer Hibernate à utiliser ce nom pour la colonne dans la table
+    // (sinon par defaut -> snake_case du nom de la propriété)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "toy_id", nullable = false)
+    @Column(name = "toy_id")
     private Long id;
-    @Column( insertable=false, updatable=false)
     private String name;
     private String description;
-    private String picture;
-    private boolean available;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "name")
-    private User owner;
+    // @ManyToOne pour dire à Hibernate qu'il y a une relation n..1 entre cette entité et une autre
+    // FetchType.LAZY pour dire à Hibernate de ne pas chercher la valeur automatiquement... à un moment...
+    @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn pour dire à Hibernate de créer une colonne dans la table de l'entité courante
+    // mais que cette colonne vient d'une clé externe
+    // name + referencedColumnName pour dire de prendre la valeur de "referencedColumnName" de la clé externe
+    // (ici, Users), et de la mettre dans une colonne "name" de cette entité (ici, Toy)
+    @JoinColumn(name = "user_first_name", referencedColumnName = "first_name")
+    private User user;
 
-    @OneToMany(mappedBy = "toyId", cascade = CascadeType.ALL)
-    private List<Transaction> tradedToys;
+    public Toy() {
 
-    public Toy () {
     }
 
-    public Toy(String name, String description, String picture, boolean available, User ownerId) {
-        this.setName(name);
-        this.setDescription(description);
-        this.setPicture(picture);
-        this.setAvailable(available);
-        this.setOwnerId(ownerId);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Toy(String name, String description) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getPicture() {
-        return picture;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public User getUser() {
+        return this.user;
     }
 
-    public boolean available() {
-        return available;
+    public String getName() {
+        return this.name;
     }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwnerId(User ownerId) {
-        this.owner = owner;
-    }
-
-    public List<Transaction> getTradedToys() {
-        return tradedToys;
-    }
-
-    public void setTradedToys(List<Transaction> tradedToys) {
-        this.tradedToys = tradedToys;
+    public String getDescription() {
+        return this.description;
     }
 }
