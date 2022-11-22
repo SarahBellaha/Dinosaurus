@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,11 +35,16 @@ public class DinosaurusController {
     private UserRepository userRepository;
 
     // GET ALL
-    @GetMapping("/toys")
-    public List<Toy> getToys(@RequestParam(required = false) String sort) {
-        List<Toy> toys = sort.isEmpty() ? toyRepository.findAllToysAvailable()
-                : toyRepository.findAllToysAvailableSorted(Sort.by(sort));
-        return toys;
+    // @GetMapping("/toys")
+    // public List<Toy> getToys(@RequestParam(required = false) String sort) {
+    // List<Toy> toys = sort.isEmpty() ? toyRepository.findAllToysAvailable()
+    // : toyRepository.findAllToysAvailableSorted(Sort.by(sort));
+    // return toys;
+    // }
+
+    @GetMapping("toys")
+    public List<Toy> getToys() {
+        return toyRepository.findAll();
     }
 
     @GetMapping("/users")
@@ -46,18 +52,18 @@ public class DinosaurusController {
         return userRepository.findAll();
     }
 
-    @GetMapping("/transaction")
+    @GetMapping("/transactions")
     public List<Transaction> getTransactions(TransactionRepository transactions) {
         return transactionRepository.findAll();
     }
 
     // GET BY ID
     @GetMapping("user/{id}")
-    public Optional<Toy> getUserbyId(@PathVariable Long id) {
+    public Optional<User> getUserbyId(@PathVariable Long id) {
         if (id == null) {
             throw new ResponseStatusException(HttpStatus.SEE_OTHER, "Toy not found");
         } else
-            return toyRepository.findById(id);
+            return userRepository.findById(id);
     }
 
     @GetMapping("transaction/{id}")
@@ -79,21 +85,21 @@ public class DinosaurusController {
 
     // POST / UPDATE
     @PostMapping("/toys")
-    public String postToy(@ModelAttribute Toy toy) {
+    public String postToy(@RequestBody Toy toy) {
         toyRepository.save(toy);
         return "redirect:/toys";
     }
 
     @PostMapping("/users")
-    public String postUser(@ModelAttribute User user) {
+    public String postUser(@RequestBody User user) {
         userRepository.save(user);
-        return "redirect:/toys";
+        return "redirect:/users";
     }
 
     @PostMapping("/transactions")
-    public String postTransaction(@ModelAttribute Transaction transaction) {
+    public String postTransaction(@RequestBody Transaction transaction) {
         transactionRepository.save(transaction);
-        return "redirect:/toys";
+        return "redirect:/transactions";
     }
 
     // DELETE
