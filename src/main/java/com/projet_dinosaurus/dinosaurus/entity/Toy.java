@@ -15,6 +15,10 @@ public class Toy {
     private String picture;
     private boolean isAvailable;
 
+    public Toy() {
+
+    }
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User toyOwner;

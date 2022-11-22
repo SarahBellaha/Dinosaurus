@@ -21,6 +21,10 @@ public class Transaction {
     @JoinColumn(name = "traded_toy", insertable = false, updatable = false)
     private Toy tradedToy;
 
+    public Transaction() {
+
+    }
+
     public Long getId() {
         return id;
     }

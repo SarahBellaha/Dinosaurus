@@ -3,7 +3,7 @@ package com.projet_dinosaurus.dinosaurus.entity;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity(name="user")
+@Entity(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +26,18 @@ public class User {
     private List<Transaction> reservedToys;
 
     public User() {
+
     }
 
-    public User(String lastname, String firstname, String city, String email, String password, String role) {
+    public User(String lastname, String firstname, String city) {
+        this.lastname = lastname;
+        this.firstname = firstname;
+        this.city = city;
+
+    }
+
+    public User(String lastname, String firstname, String city, String email, String password,
+            String role) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.city = city;
@@ -37,7 +46,8 @@ public class User {
         this.role = role;
     }
 
-    public User(Long id, String lastname, String firstname, String city, String email, String password, String role) {
+    public User(Long id, String lastname, String firstname, String city, String email,
+            String password, String role) {
         this.id = id;
         this.lastname = lastname;
         this.firstname = firstname;
