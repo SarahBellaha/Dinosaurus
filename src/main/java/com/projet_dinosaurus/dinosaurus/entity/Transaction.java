@@ -1,5 +1,9 @@
 package com.projet_dinosaurus.dinosaurus.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity(name = "transaction")
@@ -9,17 +13,37 @@ public class Transaction {
     @Column(name = "transaction_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "owner_id", insertable = false, updatable = false)
-    private User owner;
+    // --------- TEST ---------
+    private Long toyOwnerId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "taker_id", insertable = false, updatable = false)
-    private User taker;
+    public Long getToyOwnerId() {
+        return toyOwnerId;
+    }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "traded_toy", insertable = false, updatable = false)
+    public void setToyOwnerId(Long toyOwnerId) {
+        this.toyOwnerId = toyOwnerId;
+    }
+
+    // __________________________________
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "traded_toy_id", referencedColumnName = "toy_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Toy tradedToy;
+
+    //                 ___ USERS ___
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "taker_user_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User toyTaker;
+
+
+    //___________________________________
+
+    public Transaction() {
+    }
+
 
     public Long getId() {
         return id;
@@ -29,21 +53,8 @@ public class Transaction {
         this.id = id;
     }
 
-    public User getOwner() {
-        return owner;
-    }
+    // ---------- Getters // setters relations -------------
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public User getTaker() {
-        return taker;
-    }
-
-    public void setTaker(User taker) {
-        this.taker = taker;
-    }
 
     public Toy getTradedToy() {
         return tradedToy;
@@ -51,5 +62,14 @@ public class Transaction {
 
     public void setTradedToy(Toy tradedToy) {
         this.tradedToy = tradedToy;
+    }
+
+
+    public User getToyTaker() {
+        return toyTaker;
+    }
+
+    public void setToyTaker(User toyTaker) {
+        this.toyTaker = toyTaker;
     }
 }

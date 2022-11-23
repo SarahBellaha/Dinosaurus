@@ -1,29 +1,56 @@
 package com.projet_dinosaurus.dinosaurus.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name="user")
-public class User {
+@JsonInclude(JsonInclude.Include.ALWAYS)
+public class User implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name="lastname")
     private String lastname;
+
+    @Column(name="firstname")
     private String firstname;
+
+    @Column(name="city")
     private String city;
+
+    @Column(name="email")
     private String email;
+
+    @Column(name="password")
     private String password;
+
+    @Column(name="role")
     private String role;
 
-    @OneToMany(mappedBy = "toyOwner", cascade = CascadeType.ALL)
-    private List<Toy> toys;
+    // __________ toys ___________
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private List<Transaction> ownedToys;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Toy> toys = new ArrayList<>();
 
-    @OneToMany(mappedBy = "taker", cascade = CascadeType.ALL)
-    private List<Transaction> reservedToys;
+    // __________ Transactions _____________
+
+    //          --- Reserved ---
+
+    @OneToMany(mappedBy = "toyTaker")
+    @JsonIgnore
+    private List<Transaction> reservedToys = new ArrayList<>();
+
+    // _____________________________________
 
     public User() {
     }
@@ -38,7 +65,7 @@ public class User {
     }
 
     public User(Long id, String lastname, String firstname, String city, String email, String password, String role) {
-        this.id = id;
+        this.setId(id);
         this.lastname = lastname;
         this.firstname = firstname;
         this.city = city;
@@ -48,12 +75,13 @@ public class User {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
+
 
     public String getLastname() {
         return lastname;
@@ -103,6 +131,10 @@ public class User {
         this.role = role;
     }
 
+    // --------  Getters / Setters of relations ---------
+
+    //                 -----  Toys  -----
+
     public List<Toy> getToys() {
         return toys;
     }
@@ -111,19 +143,13 @@ public class User {
         this.toys = toys;
     }
 
-    public List<Transaction> getOwnedToys() {
-        return ownedToys;
-    }
-
-    public void setOwnedToys(List<Transaction> ownedToys) {
-        this.ownedToys = ownedToys;
-    }
+    //               -----  Transactions  -----
 
     public List<Transaction> getReservedToys() {
         return reservedToys;
     }
 
-    public void setReservedToys(List<Transaction> reserved) {
-        this.reservedToys = reserved;
+    public void setReservedToys(List<Transaction> reservedToys) {
+        this.reservedToys = reservedToys;
     }
 }
