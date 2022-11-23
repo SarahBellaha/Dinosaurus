@@ -13,6 +13,7 @@ import java.util.MissingResourceException;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("*")
 public class DinosaurusController {
     @Autowired
     private ToyRepository toyRepository;
@@ -51,6 +52,16 @@ public class DinosaurusController {
         return new ResponseEntity<>(newToy, HttpStatus.CREATED);
     }
 
+    //      --- UPDATE TOY'S AVAILABILITY ---
+
+    @PutMapping("/toys/{id}")
+    public Toy updateAvailability(@PathVariable Long id) {
+        Toy toy = toyRepository.findById(id).orElse(null);
+        toy.setAvailable(!toy.isAvailable());
+        toyRepository.save(toy);
+        return toy;
+    }
+
 
     // ----------------- USERS -------------------
 
@@ -59,6 +70,31 @@ public class DinosaurusController {
     public List<User> getUsers() {
         return userRepository.findAll();
     }
+
+    //              --- USER'S TOYS ---
+
+    @GetMapping("users/toys/{id}")
+    public List<Toy> getUserToys(@PathVariable Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.get().getToys();
+    }
+
+    //            --- USER'S REQUESTS ---
+
+    @GetMapping("users/requests/{owner_id}")
+    public List<Transaction> getUserRequests(@PathVariable Long owner_id) {
+        List<Transaction> requests = transactionRepository.findAllRequests(owner_id);
+        return requests;
+    }
+
+    //          --- USER'S RESERVATIONS ---
+
+    @GetMapping("users/reservations/{taker_id}")
+    public List<Transaction> getUserReservations(@PathVariable Long taker_id) {
+        List<Transaction> requests = transactionRepository.findAllReservations(taker_id);
+        return requests;
+    }
+
 
     //              --- USER BY ID ---
 

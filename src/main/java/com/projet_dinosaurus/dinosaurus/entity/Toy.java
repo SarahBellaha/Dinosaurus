@@ -94,12 +94,4 @@ public class Toy implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-
-    /*public List<Transaction> getTradedToys() {
-        return tradedToys;
-    }
-
-    public void setTradedToys(List<Transaction> tradedToys) {
-        this.tradedToys = tradedToys;
-    }*/
 }
