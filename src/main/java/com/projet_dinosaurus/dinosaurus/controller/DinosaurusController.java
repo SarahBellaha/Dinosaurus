@@ -24,43 +24,23 @@ public class DinosaurusController {
     private UserRepository userRepository;
 
 
-    /* @GetMapping("/toys")
-    public List<Toy> getToys(@RequestParam(required = false) String sort) {
-        List<Toy> toys = sort.isEmpty()? toyRepository.findAllToysAvailable() :
-                toyRepository.findAllToysAvailableSorted(Sort.by(sort));
-        return toys;
-    } */
+    // ----------- TOYS ROUTES ------------
 
+   //            --- ALL TOYS ---
     @GetMapping("toys")
     public List<Toy> getToys() {
         return toyRepository.findAll();
     }
 
-
-
-    @GetMapping("transactions")
-    public List<Transaction> getTransactions() {
-        return transactionRepository.findAll();
-    }
-
-    @GetMapping("users")
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
+    //          --- TOYS BY ID ---
 
     @GetMapping("toys/{id}")
     public Optional<Toy> getToyById(@PathVariable Long id) {
-            Optional<Toy> toy = toyRepository.findById(id);
+        Optional<Toy> toy = toyRepository.findById(id);
         return toy;
     }
-    // ----------------------------------------
-    /*@PostMapping("/toys")
-    public String addToy(@RequestBody Toy toy) {
 
-        System.out.println(toy.getOwner());
-        toyRepository.save(toy);
-        return "Post Toys Ok";
-    }*/
+    //            --- POST TOY ---
 
     @PostMapping("/users/{userId}/toys")
     public ResponseEntity<Toy> createToy(@PathVariable(value = "userId") Long userId, @RequestBody Toy toy) {
@@ -71,17 +51,58 @@ public class DinosaurusController {
         return new ResponseEntity<>(newToy, HttpStatus.CREATED);
     }
 
-    // _________________________________________
 
-    @PostMapping("/transactions")
-    public Transaction addTransaction(@RequestBody Transaction transaction) {
-        return transactionRepository.save(transaction);
+    // ----------------- USERS -------------------
+
+    //              --- ALL USERS ---
+    @GetMapping("users")
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
+
+    //              --- USER BY ID ---
+
+    @GetMapping("users/{id}")
+    public Optional<User> getUserById(@PathVariable Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user;
+    }
+
+    //              --- POST USER ---
 
     @PostMapping("/users")
     public String addToy(@RequestBody User user) {
         userRepository.save(user);
         return "post OK !";
     }
+
+
+    // ______________ TRANSACTIONS ________________
+
+    //           --- ALL TRANSACTIONS ---
+
+    @GetMapping("transactions")
+    public List<Transaction> getTransactions() {
+        return transactionRepository.findAll();
+    }
+
+    //           --- POST TRANSACTION ---
+
+    @PostMapping("/users/{takerUserId}/{tradedToy}/transactions")
+    public ResponseEntity<Transaction> createToy(@PathVariable(value = "takerUserId") Long takerUserId,
+                                                 @PathVariable(value = "tradedToy") Long tradedToy,
+                                                 @RequestBody Transaction transaction) {
+
+        // -- set Owner and taker
+        Transaction newTransaction = userRepository.findById(takerUserId).map(user -> {
+            transaction.setToyTaker(user);
+            transaction.setTradedToy(toyRepository.findById(tradedToy).get());
+            System.out.println(transaction.getTradedToy().getUser().getFirstname());
+            return transactionRepository.save(transaction);
+        }).orElseThrow(() -> new MissingResourceException("No user found for this id...", "User", ""));
+
+        return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
+    }
+
 
 }

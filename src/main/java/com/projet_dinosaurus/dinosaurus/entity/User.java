@@ -1,5 +1,7 @@
 package com.projet_dinosaurus.dinosaurus.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name="user")
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class User implements Serializable {
 
     @Id
@@ -33,14 +36,21 @@ public class User implements Serializable {
     @Column(name="role")
     private String role;
 
+    // __________ toys ___________
+
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Toy> toys = new ArrayList<>();
 
-    /*@OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL)
-    private List<Transaction> ownedToys;
+    // __________ Transactions _____________
 
-    @OneToMany(mappedBy = "takerId", cascade = CascadeType.ALL)
-    private List<Transaction> reservedToys;*/
+    //          --- Reserved ---
+
+    @OneToMany(mappedBy = "toyTaker")
+    @JsonIgnore
+    private List<Transaction> reservedToys = new ArrayList<>();
+
+    // _____________________________________
 
     public User() {
     }
@@ -121,20 +131,25 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    // --------  Getters / Setters of relations ---------
 
-    /*public List<Transaction> getOwnedToys() {
-        return ownedToys;
+    //                 -----  Toys  -----
+
+    public List<Toy> getToys() {
+        return toys;
     }
 
-    public void setOwnedToys(List<Transaction> ownedToys) {
-        this.ownedToys = ownedToys;
+    public void setToys(List<Toy> toys) {
+        this.toys = toys;
     }
+
+    //               -----  Transactions  -----
 
     public List<Transaction> getReservedToys() {
         return reservedToys;
     }
 
-    public void setReservedToys(List<Transaction> reserved) {
-        this.reservedToys = reserved;
-    }*/
+    public void setReservedToys(List<Transaction> reservedToys) {
+        this.reservedToys = reservedToys;
+    }
 }
