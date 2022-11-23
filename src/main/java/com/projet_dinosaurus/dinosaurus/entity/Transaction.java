@@ -9,22 +9,22 @@ public class Transaction {
     @Column(name = "transaction_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    /*@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "id_user", insertable = false, updatable = false)
-    private User ownerId;
+    private User ownerId;*/
 
     private Long takerId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    /*@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "toy_id", insertable = false, updatable = false)
-    private Toy toyId;
+    private Toy toyId;*/
 
     public Transaction() {
     }
 
     public Transaction(User ownerId, Toy toyId, Long takerId){
-        this.ownerId = ownerId;
-        this.toyId = toyId;
+        //this.ownerId = ownerId;
+        //this.toyId = toyId;
         this.takerId = takerId;
     }
 
@@ -46,7 +46,7 @@ public class Transaction {
         this.takerId = takerId;
     }
 
-    public Toy getTradedToy() {
+    /*public Toy getTradedToy() {
         return toyId;
     }
 
@@ -60,5 +60,5 @@ public class Transaction {
 
     public void setOwnerId(User ownerId) {
         this.ownerId = ownerId;
-    }
+    }*/
 }

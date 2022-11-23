@@ -3,37 +3,44 @@ package com.projet_dinosaurus.dinosaurus.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name="user")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
-    private Long ownerId;
+    @Column(name = "id", nullable = false)
+    private Long id;
 
+    @Column(name="lastname")
     private String lastname;
 
+    @Column(name="firstname")
     private String firstname;
 
+    @Column(name="city")
     private String city;
 
+    @Column(name="email")
     private String email;
 
+    @Column(name="password")
     private String password;
 
+    @Column(name="role")
     private String role;
 
-    @OneToMany( targetEntity = Toy.class, mappedBy = "owner", cascade = CascadeType.ALL)
-    private List<Toy> toys;
+    @OneToMany(mappedBy = "user")
+    private List<Toy> toys = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL)
+    /*@OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL)
     private List<Transaction> ownedToys;
 
     @OneToMany(mappedBy = "takerId", cascade = CascadeType.ALL)
-    private List<Transaction> reservedToys;
+    private List<Transaction> reservedToys;*/
 
     public User() {
     }
@@ -47,8 +54,8 @@ public class User {
         this.role = role;
     }
 
-    public User(Long ownerId, String lastname, String firstname, String city, String email, String password, String role) {
-        this.setOwnerId(ownerId);
+    public User(Long id, String lastname, String firstname, String city, String email, String password, String role) {
+        this.setId(id);
         this.lastname = lastname;
         this.firstname = firstname;
         this.city = city;
@@ -57,12 +64,12 @@ public class User {
         this.role = role;
     }
 
-    public Long getOwnerId() {
-        return this.ownerId;
+    public Long getId() {
+        return this.id;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
 
@@ -114,15 +121,8 @@ public class User {
         this.role = role;
     }
 
-    public List<Toy> getToys() {
-        return toys;
-    }
 
-    public void setToys(List<Toy> toys) {
-        this.toys = toys;
-    }
-
-    public List<Transaction> getOwnedToys() {
+    /*public List<Transaction> getOwnedToys() {
         return ownedToys;
     }
 
@@ -136,5 +136,5 @@ public class User {
 
     public void setReservedToys(List<Transaction> reserved) {
         this.reservedToys = reserved;
-    }
+    }*/
 }
