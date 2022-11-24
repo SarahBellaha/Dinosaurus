@@ -1,13 +1,15 @@
 package com.projet_dinosaurus.dinosaurus.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "user")
+@Entity(name="user")
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class User implements Serializable {
 
     @Id
@@ -15,45 +17,44 @@ public class User implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "lastname")
+    @Column(name="lastname")
     private String lastname;
 
-    @Column(name = "firstname")
+    @Column(name="firstname")
     private String firstname;
 
-    @Column(name = "city")
+    @Column(name="city")
     private String city;
 
-    @Column(name = "email")
+    @Column(name="email")
     private String email;
 
-    @Column(name = "password")
+    @Column(name="password")
     private String password;
 
-    @Column(name = "role")
+    @Column(name="role")
     private String role;
 
+    // __________ toys ___________
+
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Toy> toys = new ArrayList<>();
 
-    /*
-     * @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL) private List<Transaction>
-     * ownedToys;
-     * 
-     * @OneToMany(mappedBy = "takerId", cascade = CascadeType.ALL) private List<Transaction>
-     * reservedToys;
-     */
+    // __________ Transactions _____________
 
-    public User() {}
+    //          --- Reserved ---
 
-    public User(String lastname, String email) {
-        this.lastname = lastname;
-        this.email = email;
+    @OneToMany(mappedBy = "toyTaker")
+    @JsonIgnore
+    private List<Transaction> reservedToys = new ArrayList<>();
 
+    // _____________________________________
+
+    public User() {
     }
 
-    public User(String lastname, String firstname, String city, String email, String password,
-            String role) {
+    public User(String lastname, String firstname, String city, String email, String password, String role) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.city = city;
@@ -62,8 +63,7 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public User(Long id, String lastname, String firstname, String city, String email,
-            String password, String role) {
+    public User(Long id, String lastname, String firstname, String city, String email, String password, String role) {
         this.setId(id);
         this.lastname = lastname;
         this.firstname = firstname;
@@ -130,14 +130,25 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    // --------  Getters / Setters of relations ---------
 
-    /*
-     * public List<Transaction> getOwnedToys() { return ownedToys; }
-     * 
-     * public void setOwnedToys(List<Transaction> ownedToys) { this.ownedToys = ownedToys; }
-     * 
-     * public List<Transaction> getReservedToys() { return reservedToys; }
-     * 
-     * public void setReservedToys(List<Transaction> reserved) { this.reservedToys = reserved; }
-     */
+    //                 -----  Toys  -----
+
+    public List<Toy> getToys() {
+        return toys;
+    }
+
+    public void setToys(List<Toy> toys) {
+        this.toys = toys;
+    }
+
+    //               -----  Transactions  -----
+
+    public List<Transaction> getReservedToys() {
+        return reservedToys;
+    }
+
+    public void setReservedToys(List<Transaction> reservedToys) {
+        this.reservedToys = reservedToys;
+    }
 }
