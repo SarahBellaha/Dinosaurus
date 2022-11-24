@@ -25,12 +25,11 @@ public class DinosaurusController {
     private UserRepository userRepository;
 
 
-    /* @GetMapping("/toys")
-    public List<Toy> getToys(@RequestParam(required = false) String sort) {
-        List<Toy> toys = sort.isEmpty()? toyRepository.findAllToysAvailable() :
-                toyRepository.findAllToysAvailableSorted(Sort.by(sort));
-        return toys;
-    } */
+    /*
+     * @GetMapping("/toys") public List<Toy> getToys(@RequestParam(required = false) String sort) {
+     * List<Toy> toys = sort.isEmpty()? toyRepository.findAllToysAvailable() :
+     * toyRepository.findAllToysAvailableSorted(Sort.by(sort)); return toys; }
+     */
 
     @GetMapping("toys")
     public List<Toy> getToys() {
@@ -51,24 +50,24 @@ public class DinosaurusController {
 
     @GetMapping("toys/{id}")
     public Optional<Toy> getToyById(@PathVariable Long id) {
-            Optional<Toy> toy = toyRepository.findById(id);
+        Optional<Toy> toy = toyRepository.findById(id);
         return toy;
     }
     // ----------------------------------------
-    /*@PostMapping("/toys")
-    public String addToy(@RequestBody Toy toy) {
-
-        System.out.println(toy.getOwner());
-        toyRepository.save(toy);
-        return "Post Toys Ok";
-    }*/
+    /*
+     * @PostMapping("/toys") public String addToy(@RequestBody Toy toy) {
+     * 
+     * System.out.println(toy.getOwner()); toyRepository.save(toy); return "Post Toys Ok"; }
+     */
 
     @PostMapping("/users/{userId}/toys")
-    public ResponseEntity<Toy> createToy(@PathVariable(value = "userId") Long userId, @RequestBody Toy toy) {
+    public ResponseEntity<Toy> createToy(@PathVariable(value = "userId") Long userId,
+            @RequestBody Toy toy) {
         Toy newToy = userRepository.findById(userId).map(user -> {
             toy.setUser(user);
             return toyRepository.save(toy);
-        }).orElseThrow(() -> new MissingResourceException("No user found for this id...", "User", ""));
+        }).orElseThrow(
+                () -> new MissingResourceException("No user found for this id...", "User", ""));
         return new ResponseEntity<>(newToy, HttpStatus.CREATED);
     }
 
