@@ -17,10 +17,8 @@ public class SecurityConfig{
         http.csrf().disable().authorizeHttpRequests((authz) -> {
                             try {
                                 authz
-                                        .antMatchers("/toys").permitAll();
-                                        /*.antMatchers("/avengers/assemble").hasRole("CHAMPION")
-                                        .antMatchers("/secret-bases").hasRole("DIRECTOR")
-                                        .anyRequest().authenticated().and().formLogin();*/
+                                        .antMatchers("/toys").permitAll()
+                                        .antMatchers("/").permitAll();
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
