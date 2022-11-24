@@ -6,11 +6,14 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "toy")
-public class Toy {
-    @Id
+@Entity(name="toy")
+@JsonInclude(JsonInclude.Include.ALWAYS)
+public class Toy implements Serializable {
+        @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "toy_id", nullable = false)
     private Long id;
@@ -20,16 +23,16 @@ public class Toy {
     private String picture;
     private boolean available;
 
-    //@Transient
-    //public Long user_id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    //@OneToMany(mappedBy = "toyId", cascade = CascadeType.ALL)
-    //private List<Transaction> tradedToys;
+    @OneToMany(mappedBy = "tradedToy")
+    private List<Transaction> tradedToys = new ArrayList<>();
+
+    // ______________
 
     public Toy () {
     }
@@ -91,12 +94,4 @@ public class Toy {
     public void setUser(User user) {
         this.user = user;
     }
-
-    /*public List<Transaction> getTradedToys() {
-        return tradedToys;
-    }
-
-    public void setTradedToys(List<Transaction> tradedToys) {
-        this.tradedToys = tradedToys;
-    }*/
 }
