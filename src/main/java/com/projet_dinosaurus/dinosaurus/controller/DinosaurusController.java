@@ -62,6 +62,15 @@ public class DinosaurusController {
         return toy;
     }
 
+    //            --- DELETE TOY ---
+
+    @DeleteMapping("toys/{id}")
+    public ResponseEntity deleteToy(@PathVariable Long id) {
+        toyRepository.deleteById(id);
+        return new ResponseEntity("Success", HttpStatus.OK);
+    }
+
+
 
     // ----------------- USERS -------------------
 
@@ -112,6 +121,13 @@ public class DinosaurusController {
         return "post OK !";
     }
 
+    //              --- DELETE USER ---
+
+    @DeleteMapping("users/{id}")
+    public ResponseEntity deleteUser(@PathVariable Long id) {
+        userRepository.deleteById(id);
+        return new ResponseEntity("Success", HttpStatus.OK);
+    }
 
     // ______________ TRANSACTIONS ________________
 
@@ -140,5 +156,12 @@ public class DinosaurusController {
         return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
     }
 
+    //            --- DELETE TRANSACTION ---
+
+    @DeleteMapping("transactions/{id}")
+    public ResponseEntity deleteTransaction(@PathVariable Long id) {
+        transactionRepository.deleteById(id);
+        return new ResponseEntity("Success", HttpStatus.OK);
+    }
 
 }
