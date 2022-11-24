@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name="user")
+@Entity(name = "user")
 public class User implements Serializable {
 
     @Id
@@ -15,37 +15,45 @@ public class User implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name="lastname")
+    @Column(name = "lastname")
     private String lastname;
 
-    @Column(name="firstname")
+    @Column(name = "firstname")
     private String firstname;
 
-    @Column(name="city")
+    @Column(name = "city")
     private String city;
 
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 
-    @Column(name="role")
+    @Column(name = "role")
     private String role;
 
     @OneToMany(mappedBy = "user")
     private List<Toy> toys = new ArrayList<>();
 
-    /*@OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL)
-    private List<Transaction> ownedToys;
+    /*
+     * @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL) private List<Transaction>
+     * ownedToys;
+     * 
+     * @OneToMany(mappedBy = "takerId", cascade = CascadeType.ALL) private List<Transaction>
+     * reservedToys;
+     */
 
-    @OneToMany(mappedBy = "takerId", cascade = CascadeType.ALL)
-    private List<Transaction> reservedToys;*/
+    public User() {}
 
-    public User() {
+    public User(String lastname, String email) {
+        this.lastname = lastname;
+        this.email = email;
+
     }
 
-    public User(String lastname, String firstname, String city, String email, String password, String role) {
+    public User(String lastname, String firstname, String city, String email, String password,
+            String role) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.city = city;
@@ -54,7 +62,8 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public User(Long id, String lastname, String firstname, String city, String email, String password, String role) {
+    public User(Long id, String lastname, String firstname, String city, String email,
+            String password, String role) {
         this.setId(id);
         this.lastname = lastname;
         this.firstname = firstname;
@@ -122,19 +131,13 @@ public class User implements Serializable {
     }
 
 
-    /*public List<Transaction> getOwnedToys() {
-        return ownedToys;
-    }
-
-    public void setOwnedToys(List<Transaction> ownedToys) {
-        this.ownedToys = ownedToys;
-    }
-
-    public List<Transaction> getReservedToys() {
-        return reservedToys;
-    }
-
-    public void setReservedToys(List<Transaction> reserved) {
-        this.reservedToys = reserved;
-    }*/
+    /*
+     * public List<Transaction> getOwnedToys() { return ownedToys; }
+     * 
+     * public void setOwnedToys(List<Transaction> ownedToys) { this.ownedToys = ownedToys; }
+     * 
+     * public List<Transaction> getReservedToys() { return reservedToys; }
+     * 
+     * public void setReservedToys(List<Transaction> reserved) { this.reservedToys = reserved; }
+     */
 }

@@ -13,6 +13,7 @@ import java.util.MissingResourceException;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200/")
 public class DinosaurusController {
     @Autowired
     private ToyRepository toyRepository;
