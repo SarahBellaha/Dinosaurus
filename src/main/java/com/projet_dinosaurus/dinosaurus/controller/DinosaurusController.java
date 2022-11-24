@@ -24,6 +24,19 @@ public class DinosaurusController {
     @Autowired
     private UserRepository userRepository;
 
+    // ----- LOGIN -----
+
+    @RequestMapping("/login")
+    public ResponseEntity login(@RequestBody User logged) {
+        User user = userRepository.findUserByEmail(logged.getEmail());
+        if(user.getEmail().equals(logged.getEmail()) && user.getPassword().equals(logged.getPassword())){
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Bad credentials", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
 
     // ----------- TOYS ROUTES ------------
 
@@ -116,9 +129,9 @@ public class DinosaurusController {
     //              --- POST USER ---
 
     @PostMapping("/users")
-    public String addToy(@RequestBody User user) {
+    public ResponseEntity<User> addToy(@RequestBody User user) {
         userRepository.save(user);
-        return "post OK !";
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     //              --- DELETE USER ---
